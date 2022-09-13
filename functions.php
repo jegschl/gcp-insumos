@@ -13,7 +13,7 @@ add_filter('emp_import_brands_taxonomy_name',function($brand){return 'pwb-brand'
 
 include_once("includes/emp_fact_bolt.php");
 
-add_filter( 'woocommerce_checkout_fields', 'emp_theme_setup_checkout_fields', 900, 1 );
+add_filter( 'woocommerce_checkout_fields', 'emp_theme_setup_checkout_fields', 9999, 1 );
 function emp_theme_setup_checkout_fields( $checkout_fields ){
 	$dte_initial_class = apply_filters('emp_bf_default_flds_class_set',EMP_BF_FLDS_DEFAULT_CLASS_SET);
 
@@ -162,6 +162,23 @@ function emp_checkout_fields_order(){
         }
     </style>
 
+    <?php
+    }
+}
+
+
+add_action('wp_footer','emp_checkout_fields_state_set_form_row_first');
+function emp_checkout_fields_state_set_form_row_first(){
+    if(is_checkout()){
+    ?>
+    <script>
+        jQuery( function( $ ) {
+            $(document).ready( function(){
+                $('#billing_state_field').removeClass('form-row-wide');
+                $('#billing_state_field').addClass('form-row-first');
+            } );
+        } );
+    </script>
     <?php
     }
 }
