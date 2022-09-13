@@ -120,47 +120,7 @@ if (!function_exists('write_log')) {
     }
 }
 
-add_filter( 
-    'gcp_allowed_shipping_methods_for_CHIG',
-    function($res){ return ['/^flat_rate\:17$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_SPED',
-    function($res){ return ['/^flat_rate\:17$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_CONC',
-    function($res){ return ['/^flat_rate\:21$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_HPEN',
-    function($res){ return ['/^flat_rate\:21$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_THNO',
-    function($res){ return ['/^flat_rate\:22$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_PENC',
-    function($res){ return ['/^flat_rate\:23$/'];},
-    90    
-);
-
-add_filter( 
-    'gcp_allowed_shipping_methods_for_TOME',
-    function($res){ return ['/^flat_rate\:24$/'];},
-    90    
-);
+include_once("includes/local_config.php");
 
 add_filter( 'woocommerce_package_rates', 'hide_shipping_weight_based', 10, 2 );
 function hide_shipping_weight_based( $rates, $package ) {
