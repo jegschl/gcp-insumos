@@ -13,12 +13,11 @@ add_filter('emp_import_brands_taxonomy_name',function($brand){return 'pwb-brand'
 
 include_once("includes/emp_fact_bolt.php");
 
-add_filter( 'woocommerce_checkout_fields', 'emp_theme_setup_checkout_fields', 40, 1 );
+add_filter( 'woocommerce_checkout_fields', 'emp_theme_setup_checkout_fields', 900, 1 );
 function emp_theme_setup_checkout_fields( $checkout_fields ){
 	$dte_initial_class = apply_filters('emp_bf_default_flds_class_set',EMP_BF_FLDS_DEFAULT_CLASS_SET);
 
-        $checkout_fields['billing']['billing_email']['priority'] = 21;
-        //$checkout_fields['billing']['billing_email']['class'] = $dte_initial_class;
+        $checkout_fields['billing']['billing_email']['priority'] = 30;
         $checkout_fields['billing']['billing_email']['class'][] = 'form-row-first';
         $k = array_search('form-row-wide',$checkout_fields['billing']['billing_email']['class']);
         if($k != false ){
@@ -30,25 +29,18 @@ function emp_theme_setup_checkout_fields( $checkout_fields ){
                 unset($checkout_fields['billing']['billing_email']['class'][$k]);
         }
 
-        $checkout_fields['billing']['billing_phone']['priority'] = 30;
+        $checkout_fields['billing']['billing_phone']['priority'] = 40;
         $checkout_fields['billing']['billing_phone']['class'][] = 'form-row-last';
 
         $checkout_fields['billing']['billing_state']['priority'] = 50;
-        $k = array_search('form-row-wide',$checkout_fields['billing']['billing_state']['class']);
-        if($k != false ){
-                unset($checkout_fields['billing']['billing_state']['class'][$k]);
-        }
-        $checkout_fields['billing']['billing_state']['class'][] = 'form-row-first';
+        $checkout_fields['billing']['billing_state']['class'] = ['form-row','form-row-first','update_totals_on_change'];
 
-        $checkout_fields['billing']['billing_city']['priority'] = 60;
-        $k = array_search('form-row-wide',$checkout_fields['billing']['billing_city']['class']);
-        if($k != false ){
-                unset($checkout_fields['billing']['billing_city']['class'][$k]);
-        }
-        $checkout_fields['billing']['billing_city']['class'][] = 'form-row-last';
         
-        $checkout_fields['billing']['billing_address_1']['priority'] = 80;
-        $checkout_fields['billing']['billing_address_2']['priority'] = 81;
+        $checkout_fields['billing']['billing_city']['class'] = ['form-row','form-row-last','update_totals_on_change'];
+        
+        $checkout_fields['billing']['billing_address_1']['priority'] = 70;
+        $checkout_fields['billing']['billing_address_2']['priority'] = 71;
+        $checkout_fields['billing']['billing_address_3']['priority'] = 72;
 
         $checkout_fields['billing']['billing_company_rut']['label'] = "RUT empresa <abbr class=\"required\" title=\"obligatorio\">*</abbr>";
         $checkout_fields['billing']['billing_company_rut']['required'] = false;
@@ -63,61 +55,15 @@ function emp_theme_setup_checkout_fields( $checkout_fields ){
         $checkout_fields['billing']['billing_company_business_line']['class'][] = 'form-row-last';
 
 
-	$checkout_fields['billing']['billing_company_address_1']['class'][] = 'form-row-last';
+	    $checkout_fields['billing']['billing_company_address_1']['class'][] = 'form-row-last';
 
         $checkout_fields['billing']['billing_company_state']['class'][] = 'form-row-first';
 
         $checkout_fields['billing']['billing_company_city']['class'][] = 'form-row-last';
 
-        $checkout_fields['billing']['billing_postcode']['priority'] = 70;
+        $checkout_fields['billing']['billing_postcode']['priority'] = 100;
 
         return $checkout_fields;
-}
-
-add_filter( 'woocommerce_checkout_fields', 'name_second' );
-
-function name_second( $checkout_fields ) {
-$checkout_fields['billing']['billing_first_name']['priority'] = 1;
-return $checkout_fields;
-}
-
-add_filter( 'woocommerce_checkout_fields', 'lastname_third' );
-
-function lastname_third( $checkout_fields ) {
-$checkout_fields['billing']['billing_last_name']['priority'] = 2;
-return $checkout_fields;
-}
-
-add_filter( 'woocommerce_checkout_fields', 'state' );
-
-function state( $checkout_fields ) {
-$checkout_fields['billing']['billing_state']['priority'] = 4;
-return $checkout_fields;
-}
-
-//billing_state
-
-add_filter( 'woocommerce_checkout_fields', 'name_second' );
-
-/* function name_second( $checkout_fields ) {
-	$checkout_fields['billing']['billing_first_name']['priority'] = 90;
-	return $checkout_fields;
-} */
-
-//include_once("includes/emp_brands_import_support.php");
-
-
-if (!function_exists('write_log')) {
-    /* Escribe datos al log de WP. */
-    function write_log($log) {
-        if (true === WP_DEBUG) {
-            if (is_array($log) || is_object($log)) {
-                error_log(print_r($log, true));
-            } else {
-                error_log($log);
-            }
-  		}
-    }
 }
 
 include_once("includes/local_config.php");
@@ -140,4 +86,82 @@ function hide_shipping_weight_based( $rates, $package ) {
         return $nr;
     }
     return $rates;
+}
+
+add_action('wp_footer','emp_checkout_fields_order');
+function emp_checkout_fields_order(){
+    if(is_checkout()){
+    ?>
+    <style>
+        #billing_first_name_field {
+            order: 0 !important;
+        }
+
+        #billing_last_name_field {
+            order: 1 !important;
+        }
+
+        #billing_email_field {
+            order: 2 !important;
+        }
+
+        #billing_phone_field {
+            order: 3 !important;
+        }
+
+        #billing_country_field {
+            order: 4 !important;
+        }
+
+        #billing_state_field {
+            order: 5 !important;
+        }
+
+        #billing_city_field {
+            order: 6 !important;
+        }
+
+        #billing_address_1_field {
+            order: 7 !important;
+        }
+
+        #billing_address_2_field {
+            order: 8 !important;
+        }
+
+        #billing_address_3_field {
+            order: 9;
+        }
+
+        #billing_dte_type_field {
+            order: 10 !important;
+        }
+
+        #billing_company_field {
+            order: 11  !important;
+        }
+
+        #billing_company_business_line_field {
+            order: 12 !important;
+        }
+
+        #billing_company_rut_field {
+            order: 13 !important;
+        }
+
+        #billing_company_address_1_field {
+            order: 14 !important;
+        }
+
+        #billing_company_state_field {
+            order: 15 !important;
+        }
+
+        #billing_company_city_field {
+            order: 16 !important;
+        }
+    </style>
+
+    <?php
+    }
 }
